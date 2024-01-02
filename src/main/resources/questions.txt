@@ -1,0 +1,5 @@
+¿Cuál es la capital de Japón?,Seúl,Tokio,Pekín,1
+¿En qué año comenzó la Primera Guerra Mundial?,1914,1920,1930,0
+¿Quién escribió "Cien años de soledad"?,Gabriel García Márquez,Pablo Neruda,Mario Vargas Llosa,0
+¿Cuántos continentes hay en el mundo?,5,6,7,1
+¿Cuál es el río más largo del mundo?,Amazonas,Nilo,Misisipi,0

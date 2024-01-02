@@ -1,54 +1,70 @@
 package org.example.model;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Question {
     private String questionText;
-    private List<String> options;
-    private int correctAnswer;
-    private int timeLimit;
+    private String[] options;
+    private int correctOptionIndex;
 
-    public Question(String questionText, List<String> options, int correctAnswer, int timeLimit) {
+    public Question(String questionText, String[] options, int correctOptionIndex) {
         this.questionText = questionText;
         this.options = options;
-        this.correctAnswer = correctAnswer;
-        this.timeLimit = timeLimit;
+        this.correctOptionIndex = correctOptionIndex;
     }
 
     public String getQuestionText() {
         return questionText;
     }
 
-    public List<String> getOptions() {
-        return options;
-    }
-
-    public int getCorrectAnswer() {
-        return correctAnswer;
-    }
-
-    public int getTimeLimit() {
-        return timeLimit;
-    }
-
     public void setQuestionText(String questionText) {
         this.questionText = questionText;
     }
 
-    public void setOptions(List<String> options) {
+    public String[] getOptions() {
+        return options;
+    }
+
+    public void setOptions(String[] options) {
         this.options = options;
     }
 
-    public void setCorrectAnswer(int correctAnswer) {
-        this.correctAnswer = correctAnswer;
+    public int getCorrectOptionIndex() {
+        return correctOptionIndex;
     }
 
-    public void setTimeLimit(int timeLimit) {
-        this.timeLimit = timeLimit;
+    public void setCorrectOptionIndex(int correctOptionIndex) {
+        this.correctOptionIndex = correctOptionIndex;
     }
 
-    @Override
-    public String toString() {
-        return "Question{" + "questionText='" + questionText + '\'' + ", options=" + options + ", correctAnswer=" + correctAnswer + ", timeLimit=" + timeLimit + '}';
+    public static List<Question> loadQuestionsFromFile(String fileName) throws IOException {
+        List<Question> questions = new ArrayList<>();
+
+        try (InputStream inputStream = Question.class.getClassLoader().getResourceAsStream(fileName);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 5) { // Asumiendo que cada línea tiene 5 partes
+                    String questionText = parts[0];
+                    String[] options = { parts[1], parts[2], parts[3] };
+                    int correctOptionIndex = Integer.parseInt(parts[4]);
+
+                    Question question = new Question(questionText, options, correctOptionIndex);
+                    questions.add(question);
+                } else {
+                    System.out.println("Formato incorrecto en la línea: " + line);
+                }
+            }
+        }
+
+        return questions;
     }
 }
+

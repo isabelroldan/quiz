@@ -1,42 +1,31 @@
 package org.example.model;
 
+import java.util.Scanner;
+
 public class Player {
-    private int id;
-    private String nickname;
-    private int age;
+    private String name;
+    private int score;
 
-    public Player(int id, String nickname, int age) {
-        this.id = id;
-        this.nickname = nickname;
-        this.age = age;
+    public Player(String name) {
+        this.name = name;
+        this.score = 0;
     }
 
-    public int getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public String getNickname() {
-        return nickname;
+    public int getScore() {
+        return score;
     }
 
-    public int getAge() {
-        return age;
+    public void incrementScore() {
+        score++;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    @Override
-    public String toString() {
-        return "Player{" + "id=" + id + ", nickname='" + nickname + '\'' + ", age=" + age + '}';
+    public String provideAnswer() {
+        System.out.print(name + ", ingresa tu respuesta (a, s, d): ");
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine().toLowerCase(); // Convertir a minúsculas para manejar respuestas en cualquier caso
     }
 }
