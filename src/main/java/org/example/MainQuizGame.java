@@ -1,7 +1,6 @@
 package org.example;
 
 import org.example.model.Player;
-import org.example.model.Question;
 import org.example.model.QuizGame;
 
 import java.util.List;

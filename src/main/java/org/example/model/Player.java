@@ -23,9 +23,4 @@ public class Player {
         score++;
     }
 
-    public String provideAnswer() {
-        System.out.print(name + ", ingresa tu respuesta (a, s, d): ");
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine().toLowerCase(); // Convertir a minúsculas para manejar respuestas en cualquier caso
-    }
 }
