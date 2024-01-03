@@ -15,8 +15,11 @@ public class QuizGame {
         try {
             questions = Question.loadQuestionsFromFile("questions.txt");
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+
             // Manejo de errores: Puedes lanzar una excepción o tomar alguna otra medida según tus necesidades.
+            throw new RuntimeException("Error al cargar las preguntas desde el archivo", e);
+
         }
 
         currentPlayerIndex = 0;
