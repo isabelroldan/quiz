@@ -20,7 +20,10 @@ public class Player {
     }
 
     public void incrementScore() {
-        score++;
+        score = score + 100;
     }
 
+    public void decrementScore() {
+    if (score > 0) score = score - 50;
+    }
 }
