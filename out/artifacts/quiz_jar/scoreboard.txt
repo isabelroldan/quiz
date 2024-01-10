@@ -1,0 +1,4 @@
+Nombre del jugador: Winner
+Puntuación: 0
+Nombre del jugador: Isabel
+Puntuación: 200

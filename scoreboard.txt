@@ -1,0 +1,2 @@
+Nombre del jugador: dfss
+Puntuación: 300

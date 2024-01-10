@@ -1,6 +1,12 @@
 package org.example.model;
 
+import org.example.interfaces.Menu;
+import org.w3c.dom.ls.LSOutput;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -27,14 +33,43 @@ public class QuizGame {
         this.player2 = player2;
     }
 
-    public void startGame() {
+    public void startGame() throws InterruptedException {
         Utilities.limpiarConsola();
+
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Jugador uno introduzca su nombre: ");
+        player1.setName(scan.nextLine());
+
+        System.out.println("\n Bienvenido "+player1.getName());
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        Utilities.limpiarConsola();
+
+        System.out.print("Jugador dos introduzca su nombre: ");
+        player2.setName(scan.nextLine());
+
+        System.out.println("\nBienvenido "+player2.getName());
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         List<Thread> threads = new ArrayList<>();
 
         for (Question question : questions) {
             // Crear un hilo para cada pregunta y asignarle el jugador actual
-            Thread thread = new Thread(() -> askQuestion(question));
+            Thread thread = new Thread(() -> {
+                try {
+                    askQuestion(question);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             threads.add(thread);
             thread.start();
         }
@@ -51,17 +86,17 @@ public class QuizGame {
         displayFinalResults();
     }
 
-    private void askQuestion(Question question) {
+    private void askQuestion(Question question) throws InterruptedException {
         synchronized (this) {
             Utilities.limpiarConsola();
-            System.out.println("Jugador 1: " + player1.getScore() + "P       Jugador 2: " + player2.getScore() + "P");
+            System.out.println("    "+player1.getName()+": " + player1.getScore() + "P       "+player2.getName()+": " + player2.getScore() + "P\n");
             System.out.println("Pregunta: " + question.getQuestionText());
             for (int i = 0; i < question.getOptions().length; i++) {
-                System.out.println((i + 1) + ".- " + question.getOptions()[i]);
+                System.out.println("    "+(i + 1) + ".- " + question.getOptions()[i]);
             }
 
             Player currentPlayer = getCurrentPlayer();
-            System.out.print(currentPlayer.getName() + ", elige la respuesta: ");
+            System.out.print("\n"+currentPlayer.getName() + ", elige la respuesta: ");
 
             Scanner scanner = new Scanner(System.in);
             String userInput = scanner.nextLine();
@@ -73,12 +108,15 @@ public class QuizGame {
                 if (selectedOption == question.getCorrectOptionIndex()) {
                     System.out.println("¡Respuesta correcta!");
                     currentPlayer.incrementScore();
+                    Thread.sleep(1200);
                 } else {
                     System.out.println("Respuesta incorrecta. La respuesta correcta era: " + (question.getCorrectOptionIndex() + 1));
                     currentPlayer.decrementScore();
+                    Thread.sleep(1200);
                 }
             } else {
                 System.out.println("Entrada no válida. Debes elegir una opción válida.");
+                Thread.sleep(1200);
                 askQuestion(question);
             }
 
@@ -106,18 +144,47 @@ public class QuizGame {
         return (currentPlayerIndex == 0) ? player1 : player2;
     }
 
-    private void displayFinalResults() {
+    private void displayFinalResults() throws InterruptedException {
+        Player winner = new Player("Winner");
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        Utilities.limpiarConsola();
         System.out.println("Fin del juego. Resultados:");
         System.out.println(player1.getName() + ": " + player1.getScore() + " puntos");
         System.out.println(player2.getName() + ": " + player2.getScore() + " puntos");
 
         if (player1.getScore() > player2.getScore()) {
-            System.out.println(player1.getName() + " gana!");
+            System.out.println(player1.getName() + " gana con " + player1.getScore() + " puntos!");
+            winner = player1;
         } else if (player1.getScore() < player2.getScore()) {
-            System.out.println(player2.getName() + " gana!");
+            System.out.println(player2.getName() + " gana con " + player2.getScore() + " puntos!");
+            winner = player2;
         } else {
-            System.out.println("¡Empate!");
+            System.out.println("¡Empate!\n");
+        }
+        System.out.println("¿"+winner + " quieres guardar la puntuación? \"Y\" para si \"N\" para no");
+        Scanner scan = new Scanner(System.in);
+        String resp = scan.nextLine();
+        while (true){
+            if (resp.equals("Y")){
+                try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("scoreboard.txt", true)))) {
+                    out.println("Nombre del jugador: " + winner.getName());
+                    out.println("Puntuación: " + winner.getScore());
+                    Thread.sleep(500);
+                    Menu.menu();
+                } catch (IOException e) {
+                    System.err.println("Error al guardar los resultados en el archivo: " + e.getMessage());
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            } else if (resp.equals("N")) {
+                Menu.menu();
+            } else {
+                System.out.println("Debe escribir una opción valida");}
         }
     }
-
 }
