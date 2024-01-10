@@ -1,8 +1,5 @@
 package org.example.model;
 
-import org.example.interfaces.Menu;
-import org.w3c.dom.ls.LSOutput;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -52,7 +49,7 @@ public class QuizGame {
         System.out.print("Jugador dos introduzca su nombre: ");
         player2.setName(scan.nextLine());
 
-        System.out.println("\nBienvenido "+player2.getName());
+        System.out.println("\n Bienvenido "+player2.getName());
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
@@ -106,16 +103,16 @@ public class QuizGame {
                 int selectedOption = Integer.parseInt(userInput) - 1;
 
                 if (selectedOption == question.getCorrectOptionIndex()) {
-                    System.out.println("¡Respuesta correcta!");
+                    System.out.println("\n ¡Respuesta correcta!");
                     currentPlayer.incrementScore();
                     Thread.sleep(1200);
                 } else {
-                    System.out.println("Respuesta incorrecta. La respuesta correcta era: " + (question.getCorrectOptionIndex() + 1));
+                    System.out.println("\n Respuesta incorrecta. La respuesta correcta era: " + (question.getCorrectOptionIndex() + 1));
                     currentPlayer.decrementScore();
                     Thread.sleep(1200);
                 }
             } else {
-                System.out.println("Entrada no válida. Debes elegir una opción válida.");
+                System.out.println("\n Entrada no válida. Debes elegir una opción válida.");
                 Thread.sleep(1200);
                 askQuestion(question);
             }
@@ -145,7 +142,8 @@ public class QuizGame {
     }
 
     private void displayFinalResults() throws InterruptedException {
-        Player winner = new Player("Winner");
+        String winner = "Winner";
+        int winnerScore = 0;
 
         try {
             Thread.sleep(2000);
@@ -153,38 +151,39 @@ public class QuizGame {
             throw new RuntimeException(e);
         }
         Utilities.limpiarConsola();
-        System.out.println("Fin del juego. Resultados:");
-        System.out.println(player1.getName() + ": " + player1.getScore() + " puntos");
-        System.out.println(player2.getName() + ": " + player2.getScore() + " puntos");
+        System.out.println("Fin del juego. Resultados:\n");
+        System.out.println(" "+player1.getName() + ": " + player1.getScore() + " puntos");
+        System.out.println(" "+player2.getName() + ": " + player2.getScore() + " puntos\n");
 
         if (player1.getScore() > player2.getScore()) {
-            System.out.println(player1.getName() + " gana con " + player1.getScore() + " puntos!");
-            winner = player1;
+            System.out.println(" "+player1.getName() + " gana con " + player1.getScore() + " puntos!\n");
+            winner = player1.getName();
+            winnerScore = player1.getScore();
         } else if (player1.getScore() < player2.getScore()) {
-            System.out.println(player2.getName() + " gana con " + player2.getScore() + " puntos!");
-            winner = player2;
+            System.out.println(" "+player2.getName() + " gana con " + player2.getScore() + " puntos!\n");
+            winner = player2.getName();
+            winnerScore = player2.getScore();
         } else {
             System.out.println("¡Empate!\n");
         }
         System.out.println("¿"+winner + " quieres guardar la puntuación? \"Y\" para si \"N\" para no");
         Scanner scan = new Scanner(System.in);
         String resp = scan.nextLine();
-        while (true){
-            if (resp.equals("Y")){
-                try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("scoreboard.txt", true)))) {
-                    out.println("Nombre del jugador: " + winner.getName());
-                    out.println("Puntuación: " + winner.getScore());
-                    Thread.sleep(500);
-                    Menu.menu();
-                } catch (IOException e) {
-                    System.err.println("Error al guardar los resultados en el archivo: " + e.getMessage());
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if (resp.equals("N")) {
-                Menu.menu();
-            } else {
-                System.out.println("Debe escribir una opción valida");}
+        if (resp.equals("Y")){
+            try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("scoreboard.txt", true)))) {
+                out.println(winner + " - " + winnerScore);
+                System.out.println("Puntuacion guardada con exito");
+                out.close();
+                Thread.sleep(500);
+            } catch (IOException e) {
+                System.err.println("Error al guardar los resultados en el archivo: " + e.getMessage());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (resp.equals("N")) {
+            System.out.println("");
+        } else {
+            System.out.println("Debe escribir una opción valida");
         }
     }
 }
