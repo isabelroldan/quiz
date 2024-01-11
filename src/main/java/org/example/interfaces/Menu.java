@@ -12,11 +12,21 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
+    /**
+     * Muestra el menú principal del juego, permitiendo al usuario elegir entre jugar, ver el marcador o salir.
+     *
+     * @throws InterruptedException Se lanza si hay un problema con las interrupciones de hilos.
+     */
     public static void menu() throws InterruptedException {
+        // Variable para almacenar la opción del usuario.
         int op = 0;
+
+        // Scanner para leer la entrada del usuario.
         Scanner scan = new Scanner(System.in);
 
+        // Bucle infinito para el menú principal.
         while (true) {
+            // Limpiar la consola antes de mostrar el menú.
             Utilities.limpiarConsola();
 
             System.out.println("\n+-----------------------------------------------------------------------------+");
@@ -39,11 +49,14 @@ public class Menu {
             System.out.print("1.- Jugar\n2.- Scoreboard\n3.- Salir\n\nEscoja una opción: ");
 
             try {
+                // Leer la opción del usuario como un entero.
                 op = scan.nextInt();
             } catch (Exception e) {
+                // Capturar excepciones si la entrada no es un número entero.
                 System.out.println("La opción elegida debe ser un número entero");
             }
 
+            // Evaluar la opción del usuario y realizar la acción correspondiente.
             switch (op) {
                 case 1:
                     // Crear instancias de QuizGame, Player, etc.
@@ -58,6 +71,8 @@ public class Menu {
                     quizGame.startGame();
                     break;
                 case 2:
+                    // Mostrar el marcador.
+
                     Utilities.limpiarConsola();
                     System.out.println("\n+------------------------------------------------------------------+");
                     System.out.println("|       _____                    _                         _       |");
@@ -104,10 +119,14 @@ public class Menu {
                     scanner.nextLine();
                     break;
                 case 3:
+                    // Salir del juego.
+
                     System.out.println("\nGracias por jugar, adios.");
                     System.exit(0);
                     break;
                 default:
+                    // Manejar entrada no válida y esperar antes de mostrar el mensaje de error.
+
                     System.out.println("Escoja una opción valida del menú, de 1 a 4");
                     Thread.sleep(1000);
                     break;
