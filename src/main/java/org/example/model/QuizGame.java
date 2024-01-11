@@ -170,15 +170,14 @@ public class QuizGame {
         Scanner scan = new Scanner(System.in);
         String resp = scan.nextLine();
         if (resp.equals("Y")){
-            try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("scoreboard.txt", true)))) {
-                out.println(winner + " - " + winnerScore);
-                System.out.println("Puntuacion guardada con exito");
+            try {
+                PrintWriter out = new PrintWriter(new FileWriter("scoreboard.txt", true));
+                out.println(winner + "," + winnerScore);
                 out.close();
+                System.out.println("Puntuación guardada");
                 Thread.sleep(500);
             } catch (IOException e) {
                 System.err.println("Error al guardar los resultados en el archivo: " + e.getMessage());
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             }
         } else if (resp.equals("N")) {
             System.out.println("");

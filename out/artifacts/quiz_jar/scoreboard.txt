@@ -1,0 +1,2 @@
+Alejandro,300
+Isabel,200

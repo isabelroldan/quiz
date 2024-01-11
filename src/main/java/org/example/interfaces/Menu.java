@@ -31,7 +31,7 @@ public class Menu {
             System.out.println("|                  (__)__) (__)  (__)(./  \\.) (__) (__)                       |");
             System.out.println("+-----------------------------------------------------------------------------+\n");
 
-            System.out.print("1.- Jugar\n2.- Scoreboard\n3.- Instrucciones\n4.- Salir\n\nEscoja una opción: ");
+            System.out.print("1.- Jugar\n2.- Scoreboard\n3.- Salir\n\nEscoja una opción: ");
 
             try {
                 op = scan.nextInt();
@@ -52,12 +52,19 @@ public class Menu {
                     // Iniciar el juego
                     quizGame.startGame();
                 case 2:
-
+                    Utilities.limpiarConsola();
+                    System.out.println("\n+------------------------------------------------------------------+");
+                    System.out.println("|       _____                    _                         _       |");
+                    System.out.println("|      /  ___|                  | |                       | |      |");
+                    System.out.println("|      \\ `--.  ___ ___  _ __ ___| |__   ___   __ _ _ __ __| |      |");
+                    System.out.println("|       `--. \\/ __/ _ \\| '__/ _ \\ '_ \\ / _ \\ / _` | '__/ _` |      |");
+                    System.out.println("|      /\\__/ / (_| (_) | | |  __/ |_) | (_) | (_| | | | (_| |      |");
+                    System.out.println("|      \\____/ \\___\\___/|_|  \\___|_.__/ \\___/ \\__,_|_|  \\__,_|      |");
+                    System.out.println("|                                                                  |");
+                    System.out.println("+------------------------------------------------------------------+\n");
+                    Thread.sleep(3000);
                     break;
                 case 3:
-
-                    break;
-                case 4:
                     System.out.println("\nGracias por jugar, adios.");
                     System.exit(0);
                     break;
