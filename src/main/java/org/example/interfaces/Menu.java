@@ -4,6 +4,13 @@ import org.example.model.Player;
 import org.example.model.QuizGame;
 import org.example.model.Utilities;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
@@ -51,6 +58,7 @@ public class Menu {
 
                     // Iniciar el juego
                     quizGame.startGame();
+                    break;
                 case 2:
                     Utilities.limpiarConsola();
                     System.out.println("\n+------------------------------------------------------------------+");
@@ -62,7 +70,40 @@ public class Menu {
                     System.out.println("|      \\____/ \\___\\___/|_|  \\___|_.__/ \\___/ \\__,_|_|  \\__,_|      |");
                     System.out.println("|                                                                  |");
                     System.out.println("+------------------------------------------------------------------+\n");
-                    Thread.sleep(3000);
+
+                    List<Player> players = new ArrayList<>();
+
+                    try {
+                        BufferedReader reader = new BufferedReader(new FileReader("scoreboard.txt"));
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            String[] parts = line.split(",");
+                            String name = parts[0];
+                            int score = Integer.parseInt(parts[1]);
+                            Player player = new Player(name);
+                            player.setScore(score);
+                            players.add(player);
+                        }
+                        reader.close();
+                    } catch (IOException e) {
+                        System.out.println("Ha ocurrido un error al leer el archivo scoreboard.txt");
+                        e.printStackTrace();
+                    }
+
+                    players.sort((p1, p2) -> Integer.compare(p2.getScore(), p1.getScore()));
+
+                    System.out.println("\n+------------------------------------------+");
+                    System.out.println("| Indice | Nombre del Jugador | Puntuación |");
+                    System.out.println("+------------------------------------------+");
+
+                    for (int i = 0; i < Math.min(10, players.size()); i++) {
+                        System.out.printf("| %-6d | %-18s | %-10d |\n", i + 1, players.get(i).getName(), players.get(i).getScore());
+                        System.out.println("+------------------------------------------+");
+                    }
+
+                    System.out.println("\nPresiona cualquier tecla para continuar...");
+                    Scanner scanner = new Scanner(System.in);
+                    scanner.nextLine();
                     break;
                 case 3:
                     System.out.println("\nGracias por jugar, adios.");

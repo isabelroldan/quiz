@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,8 +19,8 @@ public class QuizGame {
         // Cargar preguntas desde el archivo al iniciar el juego
         try {
             questions = Question.loadQuestionsFromFile("questions.txt");
+            Collections.shuffle(questions);
         } catch (IOException e) {
-            // Manejo de errores: Puedes lanzar una excepción o tomar alguna otra medida según tus necesidades.
             throw new RuntimeException("Error al cargar las preguntas desde el archivo", e);
         }
         currentPlayerIndex = 0;
