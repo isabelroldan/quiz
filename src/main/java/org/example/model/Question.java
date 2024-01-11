@@ -22,17 +22,13 @@ public class Question {
         return questionText;
     }
 
-
-
     public String[] getOptions() {
         return options;
     }
 
-
     public int getCorrectOptionIndex() {
         return correctOptionIndex;
     }
-
 
     public static List<Question> loadQuestionsFromFile(String fileName) throws IOException {
         List<Question> questions = new ArrayList<>();
