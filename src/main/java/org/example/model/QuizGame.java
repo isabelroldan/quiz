@@ -20,6 +20,7 @@ public class QuizGame {
         try {
             questions = Question.loadQuestionsFromFile("questions.txt");
             Collections.shuffle(questions);
+            questions = questions.subList(0, 10);
         } catch (IOException e) {
             throw new RuntimeException("Error al cargar las preguntas desde el archivo", e);
         }
