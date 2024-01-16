@@ -71,8 +71,6 @@ public class Menu {
                     quizGame.startGame();
                     break;
                 case 2:
-                    // Mostrar el marcador.
-
                     Utilities.limpiarConsola();
                     System.out.println("\n+------------------------------------------------------------------+");
                     System.out.println("|       _____                    _                         _       |");

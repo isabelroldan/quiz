@@ -1,9 +1,6 @@
 package org.example.model;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +26,7 @@ public class QuizGame {
             Collections.shuffle(questions);
 
             // Seleccionar las primeras 10 preguntas después de mezclar.
-            questions = questions.subList(0, 10);
+            questions = questions.subList(0, 20);
         } catch (IOException e) {
             // Lanzar una excepción en caso de error durante la carga de preguntas.
             throw new RuntimeException("Error al cargar las preguntas desde el archivo", e);
@@ -133,33 +130,20 @@ public class QuizGame {
      * @throws InterruptedException Se lanza si hay un problema con las interrupciones de hilos.
      */
     private void askQuestion(Question question) throws InterruptedException {
-        // Sincronizar para evitar conflictos de acceso a recursos compartidos.
         synchronized (this) {
-            // Limpiar la consola antes de mostrar la pregunta.
             Utilities.limpiarConsola();
-
-            // Mostrar puntajes actuales de ambos jugadores.
             System.out.println("    "+player1.getName()+": " + player1.getScore() + "P       "+player2.getName()+": " + player2.getScore() + "P\n");
-
-            // Mostrar la pregunta y sus opciones.
             System.out.println("Pregunta: " + question.getQuestionText());
             for (int i = 0; i < question.getOptions().length; i++) {
                 System.out.println("    "+(i + 1) + ".- " + question.getOptions()[i]);
             }
-
-            // Obtener el jugador actual.
             Player currentPlayer = getCurrentPlayer();
             System.out.print("\n"+currentPlayer.getName() + ", elige la respuesta: ");
-
-            // Leer la respuesta del jugador desde la entrada estándar.
             Scanner scanner = new Scanner(System.in);
             String userInput = scanner.nextLine();
-
-            // Validar la respuesta ingresada por el jugador
+            // Validar la respuesta
             if (isValidInput(userInput)) {
                 int selectedOption = Integer.parseInt(userInput) - 1;
-
-                // Verificar si la respuesta es correcta y actualizar el puntaje.
                 if (selectedOption == question.getCorrectOptionIndex()) {
                     System.out.println("\n ¡Respuesta correcta!");
                     currentPlayer.incrementScore();
@@ -169,14 +153,20 @@ public class QuizGame {
                     currentPlayer.decrementScore();
                     Thread.sleep(1200);
                 }
+                // Guardar la puntuación en el archivo
+                try {
+                    PrintWriter out = new PrintWriter(new FileWriter("score.txt"));
+                    out.println(player1.getName() + "," + player1.getScore());
+                    out.println(player2.getName() + "," + player2.getScore());
+                    out.close();
+                } catch (IOException e) {
+                    System.err.println("Error al guardar los resultados en el archivo: " + e.getMessage());
+                }
             } else {
-                // Manejar entrada no válida y volver a preguntar.
                 System.out.println("\n Entrada no válida. Debes elegir una opción válida.");
                 Thread.sleep(1200);
                 askQuestion(question);
             }
-
-            // Cambiar al siguiente jugador después de cada pregunta
             switchPlayer();
         }
     }
@@ -228,6 +218,26 @@ public class QuizGame {
      * @throws InterruptedException Se lanza si hay un problema con las interrupciones de hilos.
      */
     private void displayFinalResults() throws InterruptedException {
+        // Leer las puntuaciones desde el archivo
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("score.txt"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String name = parts[0];
+                int score = Integer.parseInt(parts[1]);
+                if (name.equals(player1.getName())) {
+                    player1.setScore(score);
+                } else if (name.equals(player2.getName())) {
+                    player2.setScore(score);
+                }
+            }
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("Ha ocurrido un error al leer el archivo scoreboard.txt");
+            e.printStackTrace();
+        }
+
         // Variables para almacenar el nombre del ganador y su puntaje.
         String winner = "Winner";
         int winnerScore = 0;
