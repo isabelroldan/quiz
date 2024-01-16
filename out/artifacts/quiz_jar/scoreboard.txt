@@ -1,1 +1,4 @@
 Alejandro,300
+Guty,700
+Guty-Isa,700
+Gutty,1000

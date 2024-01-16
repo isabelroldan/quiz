@@ -29,7 +29,7 @@ public class QuizGame {
             Collections.shuffle(questions);
 
             // Seleccionar las primeras 10 preguntas después de mezclar.
-            questions = questions.subList(0, 10);
+            questions = questions.subList(0, 20);
         } catch (IOException e) {
             // Lanzar una excepción en caso de error durante la carga de preguntas.
             throw new RuntimeException("Error al cargar las preguntas desde el archivo", e);
